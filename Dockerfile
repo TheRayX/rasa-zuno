@@ -3,23 +3,20 @@ FROM rasa/rasa:3.6.10
 # Set working directory
 WORKDIR /app
 
-# Copy all project files into container
+# Copy your Rasa project into the container
 COPY . .
 
-# ✅ Switch to root to install packages
+# Switch to root to install packages
 USER root
 
-# ✅ Fix permission error by using --no-cache-dir and upgrading pip
+# Install Python dependencies
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-# ✅ (Optional) If safetensors is still causing problems, pin it:
-# RUN pip install safetensors==0.3.1
-
-# ✅ Switch back to non-root user (as required by Render security)
+# Switch back to non-root for security
 USER 1001
 
-# ✅ Expose the default Rasa port
+# Expose the port
 EXPOSE 5005
 
-# ✅ Start Rasa server with API and CORS
-CMD ["rasa", "run", "--enable-api", "--cors", "*", "--debug"]
+# ✅ Final working CMD
+CMD ["run", "--enable-api", "--cors", "*", "--debug"]
